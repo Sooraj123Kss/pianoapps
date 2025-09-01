@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Touch Sound & Visualizer</title>
+    <style>
+        body {
+            background: url(images/waterfall.jpg);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        #mes {
+            color:white;
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+        .btns {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            width: 48px;
+            height: 48px;
+            font-size: 20px;
+            border-radius: 8px;
+            border: none;
+            background: #4CAF50;
+            color: #fff;
+        }
+        .visualizer {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 120px;
+            gap: 10px;
+        }
+        .bar {
+            width: 30px;
+            height: 60px;
+            background: #8bc34a;
+            border-radius: 4px;
+            transition: transform 0.3s;
+            transform-origin: bottom;
+        }
+    </style>
+</head>
+<body>
+    <div id="mes">Tap a button</div>
+    <div class="btns" id="btns"></div>
+    <div class="visualizer" id="visualizer"></div>
+    <script>
+        var d = [];
+        var visualizer = document.getElementById("visualizer");
+        for (var i = 0; i < 4; i++) {
+            var bar = document.createElement("div");
+            bar.className = "bar";
+            visualizer.appendChild(bar);
+            d.push(bar);
+        }
+
+        var mes = document.getElementById("mes");
+        var btns = document.getElementById("btns");
+        var letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+        letters.forEach(function(letter) {
+            var btn = document.createElement("button");
+            btn.textContent = letter;
+            btn.addEventListener("touchstart", function() { playSound(letter); });
+            btn.addEventListener("click", function() { playSound(letter); });
+            btns.appendChild(btn);
+        });
+
+        function playSound(letter) {
+            mes.textContent = "You tapped: " + letter;
+            var idx = letter.toLowerCase().charCodeAt(0) - 97 + 1;
+            var audioSrc;
+            if (letter === "Y" || letter === "y" || letter === "Z" || letter === "z") {
+                audioSrc = "audio/key01.mp3"; 
+            } else {
+                audioSrc = "audio/key" + String(idx).padStart(2, "0") + ".mp3";
+            }
+            var snd = new Audio(audioSrc);
+            snd.play().catch(function(){});
+            animateVisualizer();
+        }
+
+        function animateVisualizer() {
+            d.forEach(function(bar) {
+                var scale = Math.random() * 2 + 0.5;
+                bar.style.transform = "scaleY(" + scale + ")";
+            });
+        }
+    </script>
+</body>
+</html>
